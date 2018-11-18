@@ -1,0 +1,12 @@
+services:
+  kna_yandex_checkout.client:
+    public: true
+    class: YandexCheckout\Client
+    calls:
+    - method: setAuth
+      arguments:
+      - '%kna_yandex_checkout.shopId%'
+      - '%kna_yandex_checkout.secretKey%'
+
+  YandexCheckout\Client:
+    alias: kna_yandex_checkout.client

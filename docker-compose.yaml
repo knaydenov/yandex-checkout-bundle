@@ -1,0 +1,24 @@
+version: "3.6"
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: .docker/nginx/Dockerfile
+    depends_on:
+    - php
+    volumes:
+    - $PWD/Tests/App/public:/var/www/html/Tests/App/public
+    ports:
+    - 80:80
+  php:
+    build:
+      context: .
+      dockerfile: .docker/php/Dockerfile
+    volumes:
+    - $PWD:/var/www/html
+    environment:
+      APP_ENV: dev
+      APP_SECRET: notASecret
+      YANDEX_KASSA_SHOP_ID: $YANDEX_KASSA_SHOP_ID
+      YANDEX_KASSA_SECRET_KEY: $YANDEX_KASSA_SECRET_KEY
+    user: $UID:$GID

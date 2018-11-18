@@ -1,0 +1,32 @@
+{
+    "name": "kna/yandex-checkout-bundle",
+    "description": "A Symfony Wrapper for the yandex-money/yandex-checkout-sdk-php library",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Klim Naydenov",
+            "email": "knaydenov@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2",
+        "symfony/framework-bundle": "^4.1",
+        "yandex-money/yandex-checkout-sdk-php": "^1.0"
+    },
+    "require-dev": {
+        "symfony/phpunit-bridge": "^4.1",
+        "symfony/yaml": "^4.1",
+        "symfony/console": "^4.1"
+    },
+    "autoload": {
+      "psr-4": {
+        "Kna\\YandexCheckoutBundle\\": ""
+      }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "Kna\\YandexCheckoutBundle\\Tests\\App\\": "Tests/App/src/"
+      }
+    }
+}
