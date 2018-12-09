@@ -5,8 +5,8 @@ services:
     calls:
     - method: setAuth
       arguments:
-      - '%kna_yandex_checkout.shopId%'
-      - '%kna_yandex_checkout.secretKey%'
+      - '%kna_yandex_checkout.shop_id%'
+      - '%kna_yandex_checkout.secret_key%'
 
   YandexCheckout\Client:
     alias: kna_yandex_checkout.client

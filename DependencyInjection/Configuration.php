@@ -18,10 +18,13 @@ class Configuration implements ConfigurationInterface
 
         $root
             ->children()
-                ->scalarNode('shopId')
+                ->scalarNode('shop_id')
                     ->isRequired()
                 ->end()
-                ->scalarNode('secretKey')
+                ->scalarNode('secret_key')
+                    ->isRequired()
+                ->end()
+                ->scalarNode('notification_key')
                     ->isRequired()
                 ->end()
             ->end()
