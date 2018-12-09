@@ -1,6 +1,6 @@
 <?php
 
-use Kna\BEMBundle\Tests\App\Kernel;
+use Kna\YandexCheckoutBundle\Tests\App\Kernel;
 use Symfony\Component\Debug\Debug;
 use Symfony\Component\HttpFoundation\Request;
 
