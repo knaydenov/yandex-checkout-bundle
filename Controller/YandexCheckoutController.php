@@ -9,6 +9,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use YandexCheckout\Model\Notification\AbstractNotification;
+use YandexCheckout\Model\Notification\NotificationCanceled;
+use YandexCheckout\Model\Notification\NotificationRefundSucceeded;
 use YandexCheckout\Model\Notification\NotificationSucceeded;
 use YandexCheckout\Model\Notification\NotificationWaitingForCapture;
 use YandexCheckout\Model\NotificationEventType;
@@ -46,6 +48,12 @@ class YandexCheckoutController extends Controller
                         break;
                     case NotificationEventType::PAYMENT_SUCCEEDED:
                         $notification = new NotificationSucceeded($request->request->all());
+                        break;
+                    case NotificationEventType::PAYMENT_CANCELED:
+                        $notification = new NotificationCanceled($request->request->all());
+                        break;
+                    case NotificationEventType::REFUND_SUCCEEDED:
+                        $notification = new NotificationRefundSucceeded($request->request->all());
                         break;
                 }
 
