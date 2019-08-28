@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 use YandexCheckout\Model\Notification\AbstractNotification;
 use YandexCheckout\Model\Notification\NotificationSucceeded;
 use YandexCheckout\Model\Notification\NotificationWaitingForCapture;
+use YandexCheckout\Model\NotificationEventType;
+use YandexCheckout\Model\NotificationType;
 
 class YandexCheckoutController extends Controller
 {
@@ -35,14 +37,14 @@ class YandexCheckoutController extends Controller
 
             $request->request->replace(json_decode($request->getContent(), true));
 
-            if ($request->request->get('type') === 'notification') {
+            if ($request->request->get('type') === NotificationType::NOTIFICATION) {
                 $notification = null;
 
                 switch ($request->get('event')) {
-                    case 'payment.waiting_for_capture':
+                    case NotificationEventType::PAYMENT_WAITING_FOR_CAPTURE:
                         $notification = new NotificationWaitingForCapture($request->request->all());
                         break;
-                    case 'payment.succeeded':
+                    case NotificationEventType::PAYMENT_SUCCEEDED:
                         $notification = new NotificationSucceeded($request->request->all());
                         break;
                 }
