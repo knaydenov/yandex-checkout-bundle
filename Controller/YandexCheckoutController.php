@@ -3,8 +3,8 @@ namespace Kna\YandexCheckoutBundle\Controller;
 
 
 use Kna\YandexCheckoutBundle\Event\NotificationEvent;
-use Kna\YandexCheckoutBundle\Events;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Psr\Log\LoggerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,14 +16,25 @@ use YandexCheckout\Model\Notification\NotificationWaitingForCapture;
 use YandexCheckout\Model\NotificationEventType;
 use YandexCheckout\Model\NotificationType;
 
-class YandexCheckoutController extends Controller
+class YandexCheckoutController extends AbstractController
 {
     /**
-     * @return EventDispatcherInterface
+     * @var EventDispatcherInterface
      */
-    public function getEventDispatcher(): EventDispatcherInterface
+    protected $eventDispatcher;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    public function __construct(
+        EventDispatcherInterface $eventDispatcher,
+        LoggerInterface $logger
+    )
     {
-        return $this->get('event_dispatcher');
+        $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
     }
 
     public function notification(string $key, Request $request): Response
@@ -74,6 +85,7 @@ class YandexCheckoutController extends Controller
             throw new \Exception('Wrong request data.');
 
         } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage());
             return $this->json($exception->getMessage(), Response::HTTP_BAD_REQUEST);
         }
 

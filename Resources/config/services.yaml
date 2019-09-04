@@ -1,4 +1,9 @@
 services:
+
+  Kna\YandexCheckoutBundle\Controller\YandexCheckoutController:
+    autoconfigure: true
+    autowire: true
+
   kna_yandex_checkout.client:
     public: true
     class: YandexCheckout\Client
