@@ -1,4 +1,0 @@
-kna_yandex_checkout:
-  shop_id: '%env(YANDEX_KASSA_SHOP_ID)%'
-  secret_key: '%env(YANDEX_KASSA_SECRET_KEY)%'
-  notification_key: '%env(YANDEX_KASSA_SECRET_KEY)%'
