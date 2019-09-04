@@ -40,8 +40,8 @@ class YandexCheckoutController extends AbstractController
     public function notification(string $key, Request $request): Response
     {
         try {
-            if ($key !== $this->getParameter('kna_yandex_checkout.notification_key')) {
-                throw new \Exception('Wrong notification key.');
+            if ($key !== $this->getParameter('kna_yandex_checkout.secret_key')) {
+                throw new \Exception('Wrong secret key.');
             }
 
             if ($request->getContentType() !== 'json' || empty($request->getContent())) {
@@ -78,7 +78,7 @@ class YandexCheckoutController extends AbstractController
                         throw new \Exception('Notification has not been confirmed');
                     }
 
-                    return $this->json(null);
+                    return $this->json('OK');
                 }
             }
 

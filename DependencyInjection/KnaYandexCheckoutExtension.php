@@ -23,7 +23,6 @@ class KnaYandexCheckoutExtension extends Extension
 
         $container->setParameter('kna_yandex_checkout.shop_id', $config['shop_id']);
         $container->setParameter('kna_yandex_checkout.secret_key', $config['secret_key']);
-        $container->setParameter('kna_yandex_checkout.notification_key', $config['notification_key']);
 
         $loader->load('services.yaml');
     }
