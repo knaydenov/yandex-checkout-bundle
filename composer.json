@@ -24,10 +24,5 @@
       "psr-4": {
         "Kna\\YandexCheckoutBundle\\": ""
       }
-    },
-    "autoload-dev": {
-      "psr-4": {
-        "Kna\\YandexCheckoutBundle\\Tests\\App\\": "Tests/App/src/"
-      }
     }
 }
