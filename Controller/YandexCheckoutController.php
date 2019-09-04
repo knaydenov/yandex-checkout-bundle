@@ -72,7 +72,7 @@ class YandexCheckoutController extends AbstractController
                     $event = new NotificationEvent();
                     $event->setNotification($notification);
 
-                    $this->getEventDispatcher()->dispatch(Events::NOTIFICATION_RECEIVED, $event);
+                    $this->eventDispatcher->dispatch($event);
 
                     if (!$event->isAccepted()) {
                         throw new \Exception('Notification has not been confirmed');
