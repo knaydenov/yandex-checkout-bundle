@@ -41,7 +41,7 @@ class YandexCheckoutController extends AbstractController
     {
         try {
             if ($key !== $this->getParameter('kna_yandex_checkout.secret_key')) {
-                throw new \Exception('Wrong secret key.');
+                throw new \Exception('Wrong secret key');
             }
 
             if ($request->getContentType() !== 'json' || empty($request->getContent())) {
@@ -75,14 +75,14 @@ class YandexCheckoutController extends AbstractController
                     $this->eventDispatcher->dispatch($event);
 
                     if (!$event->isAccepted()) {
-                        throw new \Exception('Notification has not been confirmed');
+                        throw new \Exception('Notification has not been accepted');
                     }
 
                     return $this->json('OK');
                 }
             }
 
-            throw new \Exception('Wrong request data.');
+            throw new \Exception('Wrong request');
 
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
