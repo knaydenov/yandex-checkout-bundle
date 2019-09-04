@@ -78,7 +78,7 @@ class YandexCheckoutController extends AbstractController
                         throw new \Exception('Notification has not been confirmed');
                     }
 
-                    return $this->json(null);
+                    return $this->json('OK');
                 }
             }
 
