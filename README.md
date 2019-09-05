@@ -31,11 +31,13 @@ Add routing:
 
 kna_yandex_checkout:
   resource: "@KnaYandexCheckoutBundle/Resources/config/routes.yaml"
-  prefix: yandex-checkout
+  prefix: <prefix>
 
 // ...
 
 ```
+
+Set ```https://<domain.tld>/<prefix>/<secret_key>``` as URL for notifications and events in the [store settings](https://kassa.yandex.ru/my/tunes).
 
 ## Usage
 
