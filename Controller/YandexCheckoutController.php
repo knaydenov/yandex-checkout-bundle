@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use YandexCheckout\Model\Notification\AbstractNotification;
 use YandexCheckout\Model\Notification\NotificationCanceled;
 use YandexCheckout\Model\Notification\NotificationRefundSucceeded;
 use YandexCheckout\Model\Notification\NotificationSucceeded;
