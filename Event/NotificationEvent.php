@@ -2,7 +2,7 @@
 namespace Kna\YandexCheckoutBundle\Event;
 
 
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 use YandexCheckout\Model\Notification\AbstractNotification;
 
 class NotificationEvent extends Event
