@@ -20,6 +20,9 @@ Add config:
 kna_yandex_checkout:
   shop_id: '%env('YANDEX_CHECKOUT_SHOP_ID')%'
   secret_key: '%env('YANDEX_CHECKOUT_SECRET_KEY')%'
+  validate_ip: true
+  valid_ips:
+  - 192.168.1.0/16
 ```
 
 Add routing:

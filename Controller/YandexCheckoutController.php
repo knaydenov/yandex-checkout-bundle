@@ -6,6 +6,7 @@ use Kna\YandexCheckoutBundle\Event\NotificationEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use YandexCheckout\Model\Notification\NotificationCanceled;
@@ -39,6 +40,13 @@ class YandexCheckoutController extends AbstractController
     public function notification(string $key, Request $request): Response
     {
         try {
+            if (
+                $this->getParameter('kna_yandex_checkout.validate_ip') &&
+                !IpUtils::checkIp($request->getClientIp(), $this->getParameter('kna_yandex_checkout.valid_ips'))
+            ) {
+                throw new \Exception('Wrong client IP ('. $request->getClientIp() .')');
+            }
+
             if ($key !== $this->getParameter('kna_yandex_checkout.secret_key')) {
                 throw new \Exception('Wrong secret key');
             }

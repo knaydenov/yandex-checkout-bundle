@@ -10,6 +10,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,7 +36,7 @@ class YandexCheckoutControllerTest extends TestCase
     protected $container;
 
     /**
-     * @var ParameterBagInterface|MockObject
+     * @var ParameterBagInterface
      */
     protected $parameterBag;
 
@@ -52,13 +53,17 @@ class YandexCheckoutControllerTest extends TestCase
 
     protected function createParameterBag(): ParameterBagInterface
     {
-        /** @var ParameterBagInterface $parameterBag */
-        $parameterBag = $this
-            ->getMockBuilder(ParameterBagInterface::class)
-            ->setMethods(['get'])
-            ->getMockForAbstractClass()
-        ;
-        return $parameterBag;
+        return new ParameterBag([
+            'kna_yandex_checkout.secret_key' => 'right_key',
+            'kna_yandex_checkout.validate_ip' => false
+        ]);
+//        /** @var ParameterBagInterface $parameterBag */
+//        $parameterBag = $this
+//            ->getMockBuilder(ParameterBagInterface::class)
+//            ->setMethods(['get'])
+//            ->getMockForAbstractClass()
+//        ;
+//        return $parameterBag;
     }
 
     protected function createController(EventDispatcherInterface $eventDispatcher, LoggerInterface $logger): YandexCheckoutController
@@ -160,13 +165,26 @@ class YandexCheckoutControllerTest extends TestCase
         $this->controller->setContainer($this->container);
     }
 
+    public function testNotificationWithWrongClientIPReturnsErrorResponse(): void
+    {
+        $this->parameterBag->set('kna_yandex_checkout.validate_ip', true);
+        $this->parameterBag->set('kna_yandex_checkout.valid_ips', ['127.0.0.0/32']);
+
+        $request = $this->createRequest([
+            'server' => ['REMOTE_ADDR' => '192.168.1.1']
+        ]);
+        /** @var Response $response */
+        $response = $this->controller->notification('right_key', $request);
+
+        $this->assertEquals('Wrong client IP (192.168.1.1)', $response->getContent());
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+    }
+
     public function testNotificationWithWrongSecretKeyReturnsErrorResponse(): void
     {
-        $this->parameterBag->expects($this->any())->method('get')->with('kna_yandex_checkout.secret_key')->willReturn('right_key');
         $request = $this->createRequest();
-        $key = 'wrong_key';
         /** @var Response $response */
-        $response = $this->controller->notification($key, $request);
+        $response = $this->controller->notification('wrong_key', $request);
 
         $this->assertEquals('Wrong secret key', $response->getContent());
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
@@ -174,13 +192,12 @@ class YandexCheckoutControllerTest extends TestCase
 
     public function testNotificationWithWrongContentTypeReturnsErrorResponse(): void
     {
-        $this->parameterBag->expects($this->any())->method('get')->with('kna_yandex_checkout.secret_key')->willReturn('some_key');
         $request = $this->createRequest([
             'server' => ['CONTENT_TYPE' => 'text/xml']
         ]);
 
         /** @var Response $response */
-        $response = $this->controller->notification('some_key', $request);
+        $response = $this->controller->notification('right_key', $request);
 
         $this->assertEquals('Wrong content type', $response->getContent());
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
@@ -188,15 +205,13 @@ class YandexCheckoutControllerTest extends TestCase
 
     public function testNotificationWithEmptyContentTypeReturnsErrorResponse(): void
     {
-        $this->parameterBag->expects($this->any())->method('get')->with('kna_yandex_checkout.secret_key')->willReturn('some_key');
         $request = $this->createRequest([
             'server' => ['CONTENT_TYPE' => 'application/json'],
             'content' => ''
         ]);
 
-
         /** @var Response $response */
-        $response = $this->controller->notification('some_key', $request);
+        $response = $this->controller->notification('right_key', $request);
 
         $this->assertEquals('Empty request', $response->getContent());
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
@@ -204,16 +219,14 @@ class YandexCheckoutControllerTest extends TestCase
 
     public function testNotificationWithWrongTypeReturnsErrorResponse(): void
     {
-        $this->parameterBag->expects($this->any())->method('get')->with('kna_yandex_checkout.secret_key')->willReturn('some_key');
         $notification = ['type' => 'some_wrong_type'];
         $request = $this->createRequest([
             'server' => ['CONTENT_TYPE' => 'application/json'],
             'content' => json_encode($notification)
         ]);
 
-
         /** @var Response $response */
-        $response = $this->controller->notification('some_key', $request);
+        $response = $this->controller->notification('right_key', $request);
 
         $this->assertEquals('Unknown notification type', $response->getContent());
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
@@ -221,16 +234,14 @@ class YandexCheckoutControllerTest extends TestCase
 
     public function testNotificationWithWrongEventReturnsErrorResponse(): void
     {
-        $this->parameterBag->expects($this->any())->method('get')->with('kna_yandex_checkout.secret_key')->willReturn('some_key');
         $notification = ['type' => NotificationType::NOTIFICATION, 'event' => 'some_worng_event'];
         $request = $this->createRequest([
             'server' => ['CONTENT_TYPE' => 'application/json'],
             'content' => json_encode($notification)
         ]);
 
-
         /** @var Response $response */
-        $response = $this->controller->notification('some_key', $request);
+        $response = $this->controller->notification('right_key', $request);
 
         $this->assertEquals('Unknown notification event', $response->getContent());
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
@@ -280,7 +291,7 @@ class YandexCheckoutControllerTest extends TestCase
                 "test" => false
             ]
         ];
-        $this->parameterBag->expects($this->any())->method('get')->with('kna_yandex_checkout.secret_key')->willReturn('some_key');
+
         $request = $this->createRequest([
             'server' => ['CONTENT_TYPE' => 'application/json'],
             'content' => json_encode($notification)
@@ -288,7 +299,7 @@ class YandexCheckoutControllerTest extends TestCase
 
 
         /** @var Response $response */
-        $response = $this->controller->notification('some_key', $request);
+        $response = $this->controller->notification('right_key', $request);
 
         $this->assertEquals('Notification has not been accepted', $response->getContent());
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
@@ -338,7 +349,7 @@ class YandexCheckoutControllerTest extends TestCase
                 "test" => false
             ]
         ];
-        $this->parameterBag->expects($this->any())->method('get')->with('kna_yandex_checkout.secret_key')->willReturn('some_key');
+
         $request = $this->createRequest([
             'server' => ['CONTENT_TYPE' => 'application/json'],
             'content' => json_encode($notification)
@@ -349,7 +360,7 @@ class YandexCheckoutControllerTest extends TestCase
         });
 
         /** @var Response $response */
-        $response = $this->controller->notification('some_key', $request);
+        $response = $this->controller->notification('right_key', $request);
 
         $this->assertEquals('OK', $response->getContent());
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
