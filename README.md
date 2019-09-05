@@ -12,13 +12,35 @@ composer require kna/yandex-checkout-bundle
 
 ## Configuring
 
+Add config:
+
 ```yaml
 // config/packages/kna_yandex_checkout.yaml
 
 kna_yandex_checkout:
   shop_id: '%env('YANDEX_CHECKOUT_SHOP_ID')%'
   secret_key: '%env('YANDEX_CHECKOUT_SECRET_KEY')%'
+  validate_ip: true
+  valid_ips:
+  - 192.168.1.0/16
 ```
+
+Add routing:
+
+```yaml
+// config/routes.yaml
+
+// ...
+
+kna_yandex_checkout:
+  resource: "@KnaYandexCheckoutBundle/Resources/config/routes.yaml"
+  prefix: <prefix>
+
+// ...
+
+```
+
+Set ```https://<domain.tld>/<prefix>/<secret_key>``` as URL for notifications and events in the [store settings](https://kassa.yandex.ru/my/tunes).
 
 ## Usage
 

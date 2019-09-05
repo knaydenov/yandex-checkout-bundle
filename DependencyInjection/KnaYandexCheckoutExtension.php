@@ -24,6 +24,9 @@ class KnaYandexCheckoutExtension extends Extension
         $container->setParameter('kna_yandex_checkout.shop_id', $config['shop_id']);
         $container->setParameter('kna_yandex_checkout.secret_key', $config['secret_key']);
 
+        $container->setParameter('kna_yandex_checkout.validate_ip', $config['validate_ip']);
+        $container->setParameter('kna_yandex_checkout.valid_ips', $config['valid_ips']);
+
         $loader->load('services.yaml');
     }
 }
