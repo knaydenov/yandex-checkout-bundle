@@ -12,12 +12,29 @@ composer require kna/yandex-checkout-bundle
 
 ## Configuring
 
+Add config:
+
 ```yaml
 // config/packages/kna_yandex_checkout.yaml
 
 kna_yandex_checkout:
   shop_id: '%env('YANDEX_CHECKOUT_SHOP_ID')%'
   secret_key: '%env('YANDEX_CHECKOUT_SECRET_KEY')%'
+```
+
+Add routing:
+
+```yaml
+// config/routes.yaml
+
+// ...
+
+kna_yandex_checkout:
+  resource: "@KnaYandexCheckoutBundle/Resources/config/routes.yaml"
+  prefix: yandex-checkout
+
+// ...
+
 ```
 
 ## Usage

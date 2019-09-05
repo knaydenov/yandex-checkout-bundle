@@ -1,4 +1,4 @@
 kna_yandex_checkout_notification:
-  path: /notification/{key}
+  path: /{key}
   controller: Kna\YandexCheckoutBundle\Controller\YandexCheckoutController::notification
   methods:    [POST]
