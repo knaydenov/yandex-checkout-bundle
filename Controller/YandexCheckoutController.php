@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use YandexCheckout\Model\Notification\AbstractNotification;
 use YandexCheckout\Model\Notification\NotificationCanceled;
 use YandexCheckout\Model\Notification\NotificationRefundSucceeded;
 use YandexCheckout\Model\Notification\NotificationSucceeded;
@@ -44,8 +43,12 @@ class YandexCheckoutController extends AbstractController
                 throw new \Exception('Wrong secret key');
             }
 
-            if ($request->getContentType() !== 'json' || empty($request->getContent())) {
-                throw new \Exception('Wrong content type or empty request');
+            if ($request->getContentType() !== 'json') {
+                throw new \Exception('Wrong content type');
+            }
+
+            if (empty($request->getContent())) {
+                throw new \Exception('Empty request');
             }
 
             $request->request->replace(json_decode($request->getContent(), true));
@@ -66,24 +69,23 @@ class YandexCheckoutController extends AbstractController
                     case NotificationEventType::REFUND_SUCCEEDED:
                         $notification = new NotificationRefundSucceeded($request->request->all());
                         break;
+                    default:
+                        throw new \Exception('Unknown notification event');
                 }
 
-                if ($notification instanceof AbstractNotification) {
-                    $event = new NotificationEvent();
-                    $event->setNotification($notification);
+                $event = new NotificationEvent();
+                $event->setNotification($notification);
 
-                    $this->eventDispatcher->dispatch($event);
+                $this->eventDispatcher->dispatch($event);
 
-                    if (!$event->isAccepted()) {
-                        throw new \Exception('Notification has not been accepted');
-                    }
-
-                    return $this->json('OK');
+                if (!$event->isAccepted()) {
+                    throw new \Exception('Notification has not been accepted');
                 }
+
+                return $this->json('OK');
+            } else {
+                throw new \Exception('Unknown notification type');
             }
-
-            throw new \Exception('Wrong request');
-
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
             return $this->json($exception->getMessage(), Response::HTTP_BAD_REQUEST);
