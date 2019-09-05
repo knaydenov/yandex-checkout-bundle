@@ -1,5 +1,7 @@
 # KnaYandexCheckoutBundle
 
+[![Build Status](https://travis-ci.org/knaydenov/yandex-checkout-bundle.svg?branch=master)](https://travis-ci.org/knaydenov/yandex-checkout-bundle)
+
 A Symfony wrapper for the [yandex-money/yandex-checkout-sdk-php](https://github.com/yandex-money/yandex-checkout-sdk-php) library.
 
 ## Installation
