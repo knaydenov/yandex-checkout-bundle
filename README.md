@@ -47,6 +47,7 @@ Set ```https://<domain.tld>/<prefix>/<secret_key>``` as URL for notifications an
 Use dependency injection:
 
 ```php
+<?php
 // src/EventListener/DefaultController.php
 
 namespace App\Controller;
@@ -64,6 +65,7 @@ public function __constructor(Client $client)
 Create event listener:
 
 ```php
+<?php
 // src/EventListener/YandexCheckoutSubscriber.php
 
 namespace App\EventListener;
@@ -88,6 +90,83 @@ class YandexCheckoutSubscriber implements EventSubscriberInterface
         // dispatch notification
 
         $event->setAccepted(true);
+    }
+}
+```
+
+## Payum support
+
+[payum/payum-bundle](https://github.com/Payum/PayumBundle) and [kna/payum-yandex-checkout](https://github.com/knaydenov/payum-yandex-checkout) 
+should be installed.
+
+### Configuring
+
+Add config:
+
+```yaml
+// config/packages/kna_yandex_checkout.yaml
+
+kna_yandex_checkout:
+  // ...
+  payum:
+    enable: true
+    payment_class: App\Entity\Payment # default
+    payment_id_key: payment_id
+    force_payment_id: true
+```
+
+Create event listener:
+
+```php
+<?php
+// src/EventListener/YandexCheckoutSubscriber.php
+
+namespace App\EventListener;
+
+
+use Kna\YandexCheckoutBundle\Event\CaptureRequestedEvent;
+use Kna\YandexCheckoutBundle\Event\PaymentCanceledEvent;
+use Kna\YandexCheckoutBundle\Event\PaymentCapturedEvent;
+use Kna\YandexCheckoutBundle\Event\PaymentSucceededEvent;
+use Kna\YandexCheckoutBundle\Event\RefundSucceededEvent;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+
+class YandexCheckoutSubscriber implements EventSubscriberInterface
+{
+    public static function getSubscribedEvents()
+    {
+        return [
+            CaptureRequestedEvent::class => 'onCaptureRequested',
+            PaymentCanceledEvent::class => 'onPaymentCancelled',
+            PaymentCapturedEvent::class => 'onPaymentCaptured',
+            PaymentSucceededEvent::class => 'onPaymentSucceeded',
+            RefundSucceededEvent::class => 'onRefundSucceeded',
+        ];
+    }
+
+    public function onCaptureRequested(CaptureRequestedEvent $event)
+    {
+        // ...
+    }
+    
+    public function onPaymentCancelled(PaymentCanceledEvent $event)
+    {
+        // ...
+    }
+    
+    public function onPaymentCaptured(PaymentCapturedEvent $event)
+    {
+        // ...
+    }
+    
+    public function onPaymentSucceeded(PaymentSucceededEvent $event)
+    {
+        // ...
+    }
+    
+    public function onRefundSucceeded(RefundSucceededEvent $event)
+    {
+        // ...
     }
 }
 ```
