@@ -1,0 +1,10 @@
+services:
+  Kna\YandexCheckoutBundle\EventListener\PayumSubscriber:
+    arguments:
+    - '@payum'
+    - '@event_dispatcher'
+    - '@doctrine.orm.entity_manager'
+    - '%kna_yandex_checkout.payum.payment_class%'
+    - '%kna_yandex_checkout.payum.payment_id_key%'
+    tags:
+    - { name: kernel.event_subscriber }
