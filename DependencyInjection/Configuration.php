@@ -42,6 +42,23 @@ class Configuration implements ConfigurationInterface
                         '2a02:5180:0:2669::/64'
                     ])
                 ->end()
+                ->arrayNode('payum')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('enable')
+                            ->defaultFalse()
+                        ->end()
+                        ->scalarNode('payment_class')
+                            ->defaultValue('App\\Entity\\Payment')
+                        ->end()
+                        ->scalarNode('payment_id_key')
+                            ->defaultValue('payment_id')
+                        ->end()
+                        ->scalarNode('force_payment_id')
+                            ->defaultValue(true)
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ;
         return $treeBuilder;
