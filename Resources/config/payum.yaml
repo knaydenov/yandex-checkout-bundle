@@ -8,3 +8,10 @@ services:
     - '%kna_yandex_checkout.payum.payment_id_key%'
     tags:
     - { name: kernel.event_subscriber }
+
+  kna_yandex_checkout.payum.yandex_checkout_factory:
+    class: Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder
+    arguments:
+    - 'Kna\Payum\YandexCheckout\YandexCheckoutGatewayFactory'
+    tags:
+    - { name: payum.gateway_factory_builder, factory: yandex_checkout }
