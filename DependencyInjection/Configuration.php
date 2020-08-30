@@ -13,8 +13,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $root = $treeBuilder->root('kna_yandex_checkout');
+        $treeBuilder = new TreeBuilder('kna_yandex_checkout');
+        $root = $treeBuilder->getRootNode();
 
         $root
             ->children()

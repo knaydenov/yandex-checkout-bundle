@@ -11,19 +11,19 @@
     ],
     "require": {
         "php": "^7.2",
-        "symfony/framework-bundle": ">=4.0  <5.0",
+        "symfony/framework-bundle": "^4.0|^5.0",
         "yandex-money/yandex-checkout-sdk-php": "^1.4",
         "ext-json": "*"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": ">=4.0  <5.0",
-        "symfony/yaml": ">=4.0  <5.0",
-        "symfony/console": ">=4.0  <5.0",
-        "symfony/serializer": ">=4.0 <5.0",
+        "symfony/phpunit-bridge": "^4.0|^5.0",
+        "symfony/yaml": "^4.0|^5.0",
+        "symfony/console": "^4.0|^5.0",
+        "symfony/serializer": "^4.0|^5.0",
         "php-http/guzzle6-adapter": "^2.0",
         "payum/payum-bundle": "^2.3",
         "kna/payum-yandex-checkout": "dev-master",
-        "doctrine/doctrine-bundle": "^1.11",
+        "doctrine/doctrine-bundle": "^1.11|^2.0",
         "doctrine/orm": "^2.6"
     },
     "autoload": {
